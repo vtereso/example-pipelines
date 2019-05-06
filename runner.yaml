@@ -8,7 +8,7 @@ spec:
   - name: revision
     value: master
   - name: url
-    value: <mygithubrepository.git>
+    value: ${APP_GIT_REPO}
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
@@ -18,7 +18,7 @@ spec:
   type: image
   params:
   - name: url
-    value: docker.io/<mydockerusername>/<myappname>
+    value: docker.io/${DOCKER_USERNAME}/${APP_NAME}
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
@@ -26,28 +26,10 @@ metadata:
   name: simple-pipeline-run
 spec:
   pipelineRef:
-    name: simple-helm-pipeline-insecure # Change if you want to use a different pipeline
-  params:
-    - name: chart-dir
-      value: "chart"
-    - name: repository-name
-      value: "myreponame"
-    - name: release-name
-      value: "myrelease"
-    - name: target-namespace
-      value: "default"
-    - name: image-name
-      value: "<mydockerusername>/<myappname>"
-    - name: image-tag
-      value: "latest"
-    # Replace what's in values.yaml for image repository and tag according to below pattern
-    - name: replace-repo
-      value: "<replaceme>"
-    - name: replace-tag
-      value: "<replaceme>"
+    name: simple-pipeline
   trigger:
     type: manual
-  serviceAccount: "default"
+  serviceAccount: ${DASHBOARD_SERVICE_ACCOUNT}
   resources:
   - name: git-source
     resourceRef:

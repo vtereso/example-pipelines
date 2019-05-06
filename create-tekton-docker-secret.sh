@@ -5,14 +5,13 @@ echo "This script requires changes to use your own credentials!"
 
 kubectl create secret docker-registry registry-secret \
   --docker-server https://index.docker.io/v1/ \
-  --docker-username myuser \
-  --docker-password mypass \
-  --docker-email myemail \
-  --namespace default
+  --docker-username ${DOCKER_USERNAME} \
+  --docker-password ${DOCKER_PASSWORD} \
+  --namespace ${INSTALL_NAMESPACE}
 
-  kubectl patch secret registry-secret -p='{"metadata":{"annotations": {"tekton.dev/docker-0": "https://index.docker.io/v1/"}}}' \
-  --namespace default
+kubectl patch secret registry-secret -p='{"metadata":{"annotations": {"tekton.dev/docker-0": "https://index.docker.io/v1/"}}}' \
+--namespace ${INSTALL_NAMESPACE}
 
-kubectl patch sa default -n default \
+kubectl patch sa ${DASHBOARD_SERVICE_ACCOUNT} -n ${INSTALL_NAMESPACE} \
   --type=json \
   -p="[{\"op\":\"add\",\"path\":\"/secrets/0\",\"value\":{\"name\": \"registry-secret\"}}]"
