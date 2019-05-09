@@ -18,9 +18,11 @@ spec:
     resources:
       - name: builtImage
         type: image
+  securityContext:
+    runAsUser: 0
   steps:
   - name: build-and-push
-    image: gcr.io/kaniko-project/executor
+    image: gcr.io/kaniko-project/executor:latest
     args:
       - --dockerfile=${inputs.params.pathToDockerFile}
       - --destination=${outputs.resources.builtImage.url}
