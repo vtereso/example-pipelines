@@ -16,10 +16,13 @@ spec:
       default: /workspace/git-source
   outputs:
     resources:
-      - name: builtImage
-        type: image
+    - name: builtImage
+      type: image
   securityContext:
     runAsUser: 0
+  env:
+  - name: DOCKER_CONFIG
+    value: /builder/home/.docker
   steps:
   - name: build-and-push
     image: gcr.io/kaniko-project/executor:latest
