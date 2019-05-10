@@ -11,7 +11,7 @@ spec:
   tasks:
   - name: build-simple
     taskRef:
-      name: build-push
+      name: ${BUILDER}-build-push
     resources:
       inputs:
       - name: git-source
@@ -19,6 +19,7 @@ spec:
       outputs:
       - name: builtImage
         resource: docker-image
+
   - name: deploy-simple
     runAfter: [build-simple]
     taskRef: 
@@ -29,4 +30,3 @@ spec:
         resource: git-source 
       - name: image-out
         resource: docker-image
-
