@@ -28,10 +28,12 @@ spec:
   - name: build
     workingdir: /workspace/git-source
     image: ${inputs.params.BUILDER_IMAGE}
-    command: ['buildah', 'bud', '--tls-verify=${inputs.params.TLSVERIFY}', '--layers', '-f', '${inputs.params.DOCKERFILE}', '-t', '${outputs.resources.builtImage.url}', '.']
+    command: ['buildah', 'bud', '--tls-verify=${inputs.params.TLSVERIFY}', '--isolation=oci', '--layers', '-f', '${inputs.params.DOCKERFILE}', '-t', '${outputs.resources.builtImage.url}', '.']
     volumeMounts:
     - name: varlibcontainers
       mountPath: /var/lib/containers
+    securityContext:
+      privileged: true
 
   - name: push
     workingdir: /workspace/git-source
@@ -40,6 +42,8 @@ spec:
     volumeMounts:
     - name: varlibcontainers
       mountPath: /var/lib/containers
+    securityContext:
+      privileged: true
 
   volumes:
   - name: varlibcontainers
