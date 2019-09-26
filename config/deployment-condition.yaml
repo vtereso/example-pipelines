@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: deployment-condition
+spec:
+  params:
+  - name: event
+    type: string
+    description: "The event type"
+  check:
+    name: deployment-condition
+    image: alpine
+    command:
+    - sh
+    args:
+    - -ce
+    - |
+      [ $(params.event) -ne "pull_request" ]

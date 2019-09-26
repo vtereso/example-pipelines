@@ -3,6 +3,10 @@ kind: Pipeline
 metadata:
   name: simple-pipeline
 spec:
+  params:
+  - name: event
+    type: string
+    description: "The event type triggering this pipeline"
   resources: 
   - name: git-source
     type: git
@@ -22,6 +26,11 @@ spec:
 
   - name: deploy-simple
     runAfter: [build-simple]
+    conditions:
+    - conditionRef: deployment-condition
+      params:
+      - name: event
+        value: $(params.event)
     taskRef: 
       name: deploy-simple-kubectl-task
     resources: 
